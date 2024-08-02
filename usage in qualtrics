@@ -1,0 +1,78 @@
+##HTML view:
+
+<iframe id="cyberball" width="100%" height="580" src="https://cuddlebunny.github.io/osu-cyberball/#game"></iframe>
+
+##Javascript: 
+
+var throwLog = []; var leaveButtonText = 'Leave Game';
+
+Qualtrics.SurveyEngine.addOnload(function() { this.hideNextButton(); });
+
+Qualtrics.SurveyEngine.addOnReady(function() { var survey = this;
+
+function simulateThrows() {
+    var totalThrows = 30;
+    var throwsToPlayer1 = 3;
+    var remainingThrows = totalThrows - throwsToPlayer1;
+
+    // Shuffle an array to randomly assign throws to player1 and others
+    var throwsArray = Array(throwsToPlayer1).fill('player1').concat(Array(remainingThrows).fill('other'));
+
+    // Shuffle the array to distribute throws randomly
+    throwsArray.sort(() => Math.random() - 0.5);
+
+    // Log each throw in throwLog
+    throwsArray.forEach(target => {
+        throwLog.push({ type: 'throw', target: target });
+    });
+
+    // Log the simulated throws
+    console.log("Simulated Throws Log:", throwLog);
+}
+
+simulateThrows();
+
+window.addEventListener('message', function(e) {
+    switch(e.data.type) {
+        case 'throw':
+        case 'leave':
+            // Ensure new throws are not logged unless intended
+            // Comment out if needed: throwLog.push(e.data);
+            break;
+        case 'player-may-leave':
+            throwLog.push(e.data);
+
+            jQuery('#NextButton').clone()
+                .attr('disabled', false)
+                .attr('title', leaveButtonText)
+                .attr('value', leaveButtonText)
+                .attr('aria-label', leaveButtonText)
+                .attr('style', 'margin-right: 10px')
+                .prependTo('#Buttons')
+                .one('click', function() {
+                    throwLog.push({
+                        type: 'player-left'
+                    });
+
+                    Qualtrics.SurveyEngine.setEmbeddedData('GameLog', JSON.stringify(throwLog));
+
+                    survey.clickNextButton();
+                });
+
+            break;
+        case 'game-end':
+            Qualtrics.SurveyEngine.setEmbeddedData('GameLog', JSON.stringify(throwLog));
+
+            survey.showNextButton();
+
+            // Auto-advance?
+            //survey.clickNextButton();
+            break;
+        default:
+    }
+});
+});
+
+Qualtrics.SurveyEngine.addOnUnload(function() {
+
+});
