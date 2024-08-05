@@ -3,9 +3,10 @@
 # Usage in qualtrics
 
 # HTML view
-<iframe id="cyberball" width="100%" height="580" src="https://cuddlebunny.github.io/osu-cyberball/#game"></iframe>
+<iframe id="cyberball" width="100%" height="580" src="https://github.com/sabinaraja/cyberball/blob/main/README.md"></iframe>
 
 # Javascript
+
 var throwLog = [];
 var leaveButtonText = 'Leave Game';
 
