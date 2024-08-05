@@ -1,11 +1,11 @@
 # cyberball
 
-#Usage in qualtrics
+# Usage in qualtrics
 
-HTML view:
+# HTML view
 <iframe id="cyberball" width="100%" height="580" src="https://cuddlebunny.github.io/osu-cyberball/#game"></iframe>
 
-Javascript:
+# Javascript
 var throwLog = [];
 var leaveButtonText = 'Leave Game';
 
